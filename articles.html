@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ARTICLES | SATOSHI</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .container { max-width: 800px; margin: 180px auto; padding: 0 20px; }
+        .article-card { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 20px 0; align-items: center; }
+        .empty-article { display: flex; border-bottom: 1px dashed #eee; padding: 20px 0; opacity: 0.5; }
+    </style>
+</head>
+<body>
+    <div class="bg-graphic"></div>
+    <header class="nav-bar">
+        <a href="index.html" class="back-btn">← BACK TO HOME</a>
+        <div class="rr-logo-container"><span class="k-char k-front">PIX</span><span class="k-char k-back">PIX</span></div>
+        <div class="brand-subtitle">SATOSHI</div>
+    </header>
+
+    <div class="container">
+        <h2 style="letter-spacing: 5px; text-align:center;">DAILY ARTICLES (10)</h2>
+        <div id="feed"></div>
+    </div>
+
+    <script type="module">
+        import { db } from './firebase-config.js';
+        import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const feed = document.getElementById('feed');
+        onSnapshot(collection(db, "articles"), (snapshot) => {
+            feed.innerHTML = "";
+            let count = 0;
+            snapshot.forEach((doc) => {
+                const art = doc.data();
+                count++;
+                feed.innerHTML += `
+                    <div class="article-card">
+                        <div><h4 style="margin:0 0 5px;">${art.title}</h4></div>
+                        <a href="${art.url}" target="_blank" class="btn-enter" style="padding: 8px 15px;">VISIT</a>
+                    </div>
+                `;
+            });
+            for(let i = count; i < 10; i++) {
+                feed.innerHTML += `<div class="empty-article"><h4 style="margin:0; color:#999;">Article #${i+1} (Empty)</h4></div>`;
+            }
+        });
+    </script>
+</body>
+</html>
