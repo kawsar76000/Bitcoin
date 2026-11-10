@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PIXEL GENESIS | SATOSHI</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .grid-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; max-width: 1000px; margin: 180px auto 40px; padding: 10px; }
+        .block { width: 100px; height: 100px; background: #fff; border: 1px solid #ddd; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        .block img { width: 45px; height: 45px; margin-bottom: 5px; }
+        .block span { font-size: 11px; font-weight: bold; text-align: center; padding: 0 5px; word-break: break-all; }
+        .block a { font-size: 9px; color: var(--gold); text-decoration: none; }
+        .empty-block { width: 100px; height: 100px; background: #fafafa; border: 1px dashed #ddd; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #ccc; }
+    </style>
+</head>
+<body>
+    <div class="bg-graphic"></div>
+    <header class="nav-bar">
+        <a href="index.html" class="back-btn">← BACK TO HOME</a>
+        <div class="rr-logo-container"><span class="k-char k-front">PIX</span><span class="k-char k-back">PIX</span></div>
+        <div class="brand-subtitle">SATOSHI</div>
+    </header>
+
+    <div class="grid-container" id="grid"></div>
+
+    <script type="module">
+        import { db } from './firebase-config.js';
+        import { collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const grid = document.getElementById('grid');
+        const q = query(collection(db, "users"), where("status", "==", "approved"));
+        
+        onSnapshot(q, (snapshot) => {
+            grid.innerHTML = "";
+            snapshot.forEach((doc) => {
+                const user = doc.data();
+                const block = document.createElement('div');
+                block.className = 'block';
+                // ছেলে না মেয়ে
+                const imgSeed = user.gender === 'female' ? 'Female' : 'Male';
+                block.innerHTML = `
+                    <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${imgSeed}" alt="Avatar">
+                    <span>${user.blockName || user.name}</span>
+                    ${user.socialLink ? `<a href="${user.socialLink}" target="_blank">Link</a>` : ''}
+                `;
+                grid.appendChild(block);
+            });
+            // খালি ব্লক
+            for(let i = snapshot.size; i < 100; i++) {
+                const empty = document.createElement('div');
+                empty.className = 'empty-block';
+                empty.innerText = `#${i+1}`;
+                grid.appendChild(empty);
+            }
+        });
+    </script>
+</body>
+</html>
