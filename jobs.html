@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MICRO JOBS | SATOSHI</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .container { max-width: 800px; margin: 180px auto; padding: 0 20px; }
+        .job-card { display: flex; gap: 15px; border: 1px solid #eee; padding: 20px; margin-bottom: 15px; background: #fff; align-items: center; }
+        .job-img { width: 70px; height: 70px; object-fit: cover; border: 1px solid #ddd; cursor: pointer; }
+        .job-info h4 { margin: 0 0 5px; }
+        .empty-card { display: flex; gap: 15px; border: 1px dashed #eee; padding: 20px; margin-bottom: 15px; opacity: 0.5; }
+    </style>
+</head>
+<body>
+    <div class="bg-graphic"></div>
+    <header class="nav-bar">
+        <a href="index.html" class="back-btn">← BACK TO HOME</a>
+        <div class="rr-logo-container"><span class="k-char k-front">PIX</span><span class="k-char k-back">PIX</span></div>
+        <div class="brand-subtitle">SATOSHI</div>
+    </header>
+
+    <div class="container">
+        <h2 style="letter-spacing: 5px; text-align:center;">MICRO JOBS (20)</h2>
+        <div id="feed"></div>
+    </div>
+
+    <script type="module">
+        import { db } from './firebase-config.js';
+        import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const feed = document.getElementById('feed');
+        onSnapshot(collection(db, "jobs"), (snapshot) => {
+            feed.innerHTML = "";
+            let count = 0;
+            snapshot.forEach((doc) => {
+                const job = doc.data();
+                count++;
+                feed.innerHTML += `
+                    <div class="job-card">
+                        <a href="${job.targetUrl}" target="_blank"><img src="${job.imageUrl}" class="job-img"></a>
+                        <div class="job-info">
+                            <h4>Task #${count}</h4>
+                            <p style="margin:0; font-size:12px; color:#666;">${job.instruction}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            for(let i = count; i < 20; i++) {
+                feed.innerHTML += `<div class="empty-card"><div class="job-img" style="background:#eee;"></div><div><h4>Task #${i+1}</h4><p style="color:#999;">Waiting for job...</p></div></div>`;
+            }
+        });
+    </script>
+</body>
+</html>
