@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SATOSHI | THE SOVEREIGN ESTATE</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Loader -->
+    <div id="loader">
+        <div class="loader-logo">S</div>
+        <div style="color: var(--gold); letter-spacing: 5px; font-size: 10px; margin-top: 10px;">ARCHIVING SOVEREIGNTY...</div>
+    </div>
+
+    <div id="cursor-outline"></div>
+
+    <!-- Navigation Header (Original Design) -->
+    <header class="nav-bar">
+        <div class="nav-actions">
+            <button class="nav-link" id="nav-login-btn" onclick="toggleAuth()">LOGIN</button>
+            <div class="nav-link" onclick="toggleDrawer()">ACQUISITION</div>
+            <button class="nav-link" id="nav-logout-btn" style="display:none;" onclick="handleLogout()">LOGOUT</button>
+        </div>
+        
+        <a href="https://t.me/SpiderStaffingAgencyBTC" target="_blank" class="portal-link">SUPPORT</a>
+        
+        <!-- Original K Logo replaced with S Logo -->
+        <div class="rr-logo-container" onclick="showView('home')" style="cursor:pointer;">
+            <span class="k-char k-front">S</span>
+            <span class="k-char k-back">S</span>
+        </div>
+        <div class="brand-subtitle">THE SOVEREIGN ESTATE</div>
+    </header>
+
+    <!-- ========================================== -->
+    <!-- VIEW 1: HOMEPAGE PORTALS (Clean & Premium) -->
+    <!-- ========================================== -->
+    <div id="view-home" class="view-section active">
+        <!-- Section 1: Hero -->
+        <section class="snap-section">
+            <div class="reveal active">
+                <span class="label">Welcome</span>
+                <h2 class="title">Satoshi Estate</h2>
+                <p class="sub-desc">Select your destiny. Build your digital empire.</p>
+            </div>
+        </section>
+
+        <!-- Section 2: Million Dollar Homepage -->
+        <section class="snap-section">
+            <div class="reveal">
+                <span class="label">Pixel Real Estate</span>
+                <h2 class="title">Million Dollar</h2>
+                <p class="sub-desc">Own a 100x100 pixel block for just $1. Infinite grid.</p>
+                <button onclick="checkAuthAndRedirect('blocks')" class="btn-enter">Enter Estate</button>
+            </div>
+        </section>
+
+        <!-- Section 3: Micro Jobs -->
+        <section class="snap-section">
+            <div class="reveal">
+                <span class="label">Social Tasks</span>
+                <h2 class="title">Micro Jobs</h2>
+                <p class="sub-desc">Complete social media tasks daily and earn rewards.</p>
+                <button onclick="checkAuthAndRedirect('jobs')" class="btn-enter">Claim Space</button>
+            </div>
+        </section>
+
+        <!-- Section 4: Articles -->
+        <section class="snap-section">
+            <div class="reveal">
+                <span class="label">Traffic Exchange</span>
+                <h2 class="title">Article Visits</h2>
+                <p class="sub-desc">Read curated articles for 1 minute and earn.</p>
+                <button onclick="checkAuthAndRedirect('articles')" class="btn-enter">Explore Articles</button>
+            </div>
+        </section>
+
+        <!-- Section 5: Dashboard -->
+        <section class="snap-section">
+            <div class="reveal">
+                <span class="label">Your Empire</span>
+                <h2 class="title">Dashboard</h2>
+                <p class="sub-desc">View balance, withdraw funds, and track referrals.</p>
+                <button onclick="checkAuthAndRedirect('dashboard')" class="btn-enter">Enter Portal</button>
+            </div>
+        </section>
+
+        <!-- Original Footer -->
+        <footer class="footer">
+            <div class="footer-left reveal">
+                <h3>ESTATE GOVERNANCE</h3>
+                <div class="gov-item"><b>• Renewal Policy</b>One-time lifetime renewal fee of $365 is mandatory. No recurring costs ever.</div>
+                <div class="gov-item"><b>• Data Modification</b>$7 administrative fee for media, name or link updates.</div>
+                <div class="gov-item"><b>• Service Window</b>Concierge active 24h: Thursday, Friday, Saturday.</div>
+            </div>
+            <div class="footer-right reveal">
+                <h3>ACQUISITION STEPS</h3>
+                <div class="step-box"><span class="step-num">01</span><span class="step-text">Complete payment via the Acquisition Drawer (USDT BEP20).</span></div>
+                <div class="step-box"><span class="step-num">02</span><span class="step-text">Prepare 4K Photo, Display Name, and Target URL.</span></div>
+                <div class="step-box"><span class="step-num">03</span><span class="step-text">Submit assets to Telegram Support for verification.</span></div>
+                <div class="step-box"><span class="step-num">04</span><span class="step-text">Live sync completed within 2-4 hours post-approval.</span></div>
+            </div>
+            <div class="copyright">© 2026 SATOSHI. OWNED BY <b>SATOSHI</b>. ALL RIGHTS RESERVED.</div>
+        </footer>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- INNER PORTALS (Hidden by default)          -->
+    <!-- ========================================== -->
+    
+    <!-- Portal: Blocks -->
+    <div id="view-blocks" class="view-section inner-portal">
+        <button onclick="showView('home')" class="btn-back">← BACK TO HOME</button>
+        <span class="label" style="text-align:center; display:block; margin-top:20px;">Pixel Estate</span>
+        <h2 class="title" style="font-size:24px; text-align:center;">100x100 BLOCKS ($1)</h2>
+        <div class="grid-container" id="blockGrid"></div>
+    </div>
+
+    <!-- Portal: Micro Jobs -->
+    <div id="view-jobs" class="view-section inner-portal">
+        <button onclick="showView('home')" class="btn-back">← BACK TO HOME</button>
+        <span class="label" style="text-align:center; display:block; margin-top:20px;">Social Tasks</span>
+        <h2 class="title" style="font-size:24px; text-align:center;">MICRO JOBS</h2>
+        <div class="feed-container" id="microJobsFeed"></div>
+    </div>
+
+    <!-- Portal: Articles -->
+    <div id="view-articles" class="view-section inner-portal">
+        <button onclick="showView('home')" class="btn-back">← BACK TO HOME</button>
+        <span class="label" style="text-align:center; display:block; margin-top:20px;">Traffic Exchange</span>
+        <h2 class="title" style="font-size:24px; text-align:center;">DAILY ARTICLES</h2>
+        <div class="feed-container" id="articlesFeed"></div>
+    </div>
+
+    <!-- Portal: Dashboard -->
+    <div id="view-dashboard" class="view-section inner-portal">
+        <button onclick="showView('home')" class="btn-back">← BACK TO HOME</button>
+        <h2 class="title" style="font-size:24px; text-align:center; margin-top:40px;">DASHBOARD</h2>
+        <div class="dash-grid">
+            <div class="dash-card">
+                <h4>BALANCE</h4>
+                <h1 id="user-balance">$0.00</h1>
+            </div>
+            <div class="dash-card">
+                <h4>REFERRALS</h4>
+                <h1 id="user-referrals">0</h1>
+            </div>
+        </div>
+        <div class="referral-box">
+            <h4>YOUR REFERRAL LINK</h4>
+            <div class="ref-input">
+                <input type="text" id="ref-link" readonly value="https://satoshi-ebce7.web.app/?ref=USER123">
+                <button onclick="copyText('ref-link')">COPY</button>
+            </div>
+            <p style="font-size:10px; margin-top:5px; color:#888;">Earn $2 per referral. (Requires min $2 deposit).</p>
+        </div>
+        <div class="withdraw-box">
+            <h4>WITHDRAW FUNDS</h4>
+            <select id="withdraw-method">
+                <option value="bkash">bKash</option>
+                <option value="binance">Binance</option>
+            </select>
+            <input type="text" id="withdraw-number" placeholder="Enter Number/Address">
+            <input type="number" id="withdraw-amount" placeholder="Amount (Min $3 incl $1 fee)">
+            <button onclick="requestWithdraw()" class="btn-auth">REQUEST WITHDRAW</button>
+        </div>
+    </div>
+
+    <!-- Portal: Admin -->
+    <div id="view-admin" class="view-section inner-portal">
+        <button onclick="showView('home')" class="btn-back">← BACK TO HOME</button>
+        <h2 class="title" style="font-size:24px; text-align:center; margin-top:40px;">ADMIN CONTROL</h2>
+        <div class="admin-grid">
+            <div class="admin-card">
+                <h4>PENDING DEPOSITS</h4>
+                <p style="font-size: 11px;">Check email for TxID. Verify and approve.</p>
+                <button class="btn-auth" onclick="alert('Feature ready for Firebase integration.')">APPROVE USER</button>
+            </div>
+            <div class="admin-card">
+                <h4>PENDING WITHDRAWS</h4>
+                <p style="font-size: 11px;">Send money via bKash/Binance and mark paid.</p>
+                <button class="btn-auth" onclick="alert('Feature ready for Firebase integration.')">APPROVE WITHDRAW</button>
+            </div>
+            <div class="admin-card">
+                <h4>POST MICRO JOB</h4>
+                <input type="text" placeholder="Job Title">
+                <input type="text" placeholder="Image URL">
+                <button class="btn-auth" onclick="alert('Job Posted!')">POST JOB</button>
+            </div>
+            <div class="admin-card">
+                <h4>POST ARTICLE</h4>
+                <input type="text" placeholder="Article Title">
+                <input type="text" placeholder="Article URL">
+                <button class="btn-auth" onclick="alert('Article Posted!')">POST ARTICLE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODALS & DRAWERS                           -->
+    <!-- ========================================== -->
+
+    <!-- Deposit Drawer -->
+    <div id="payment-drawer">
+        <h2 style="letter-spacing: 5px; font-size: 13px; margin-bottom: 60px; font-weight: bold;">SECURE ACQUISITION</h2>
+        <div class="pay-item" onclick="copyV('0x6be5b73e44ad0b5a2845394c116d1babab8174f0')">
+            <h4>USDT (BNB SMART CHAIN - BEP20)</h4>
+            <p>0x6be5b73e44ad0b5a2845394c116d1babab8174f0</p>
+        </div>
+        <div style="font-size: 11px; line-height: 1.8; color: #555; margin-top: 20px;">
+            <p><b>Instructions:</b></p>
+            <ol style="padding-left: 15px; margin: 0;">
+                <li>Send minimum $2 USDT to the address above.</li>
+                <li>Email Screenshot & TxID to: <b>zoomlink34@gmail.com</b></li>
+                <li>Account activated in 2-4 hours.</li>
+            </ol>
+        </div>
+        <button onclick="toggleDrawer()" style="margin-top: 40px; border: none; background: none; cursor: pointer; letter-spacing: 3px; font-size: 9px; border-bottom: 1px solid #000;">[ CLOSE ]</button>
+    </div>
+
+    <!-- Auth Overlay -->
+    <div id="auth-overlay">
+        <div class="auth-container">
+            <button class="auth-close" onclick="toggleAuth()">✕</button>
+            <div class="auth-header">
+                <h2>SOVEREIGN ACCESS</h2>
+            </div>
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchAuthTab('login')">Login</button>
+                <button class="auth-tab" onclick="switchAuthTab('signup')">Sign Up</button>
+            </div>
+            <form class="auth-form active" id="login-form" onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <label>Mobile Number</label>
+                    <input type="text" id="login-phone" placeholder="017XXXXXXXX" required>
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-auth">ENTER ARCHIVE</button>
+            </form>
+            <form class="auth-form" id="signup-form" onsubmit="handleSignup(event)">
+                <div class="input-group">
+                    <label>Mobile Number</label>
+                    <input type="text" id="signup-phone" placeholder="017XXXXXXXX" required>
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="signup-password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-auth">CREATE ACCOUNT</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Floating Telegram Buttons -->
+    <a href="https://t.me/SpiderStaffingAgencyB" target="_blank" class="telegram-btn tg-channel">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.54 3.69-.52.36-1 .53-1.42.52-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.24.35-.49.96-.75 3.77-1.64 6.28-2.73 7.53-3.26 3.59-1.49 4.33-1.75 4.82-1.76.11 0 .35.03.5.15.13.12.17.29.19.42.02.08.02.28.01.44z"/></svg>
+    </a>
+    <a href="https://t.me/SpiderStaffingAgencyBTC" target="_blank" class="telegram-btn tg-group">
+        <svg viewBox="0 0 24 24"><path d="M17 12a5 5 0 1 0-5 5 5 5 0 0 0 5-5zM7 12a5 5 0 1 0-5 5 5 5 0 0 0 5-5zM22 12a5 5 0 1 0-5 5 5 5 0 0 0 5-5z"/></svg>
+    </a>
+
+    <!-- Hidden Admin Trigger -->
+    <div onclick="adminLogin()" style="position:fixed; bottom:10px; right:10px; width:20px; height:20px; z-index:9999; cursor:pointer; opacity:0.1;" title="Admin Login">⚙️</div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
