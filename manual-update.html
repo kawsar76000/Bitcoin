@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MANUAL UPDATE | SATOSHI</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background: #f4f4f4; }
+        .update-wrapper { max-width: 800px; margin: 150px auto; background: #fff; padding: 40px; border: 1px solid #ddd; display: none; }
+        .form-group { margin-bottom: 30px; background: #fafafa; padding: 20px; border-left: 4px solid var(--gold); }
+        .form-group h3 { margin-top: 0; }
+        .form-group input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ccc; box-sizing: border-box; font-family: inherit;}
+        .login-box { margin: 150px auto; background: #fff; padding: 40px; width: 300px; text-align: center; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <header class="nav-bar">
+        <a href="admin.html" class="back-btn">← BACK TO ADMIN</a>
+        <div class="rr-logo-container"><span class="k-char k-front">PIX</span><span class="k-char k-back">PIX</span></div>
+        <div class="brand-subtitle">SATOSHI</div>
+    </header>
+
+    <div id="loginBox" class="login-box">
+        <h3>UPDATE PANEL LOGIN</h3>
+        <input type="password" id="pass" placeholder="Enter Admin Password" style="width:100%; padding:10px; margin-bottom:10px; box-sizing:border-box;">
+        <button class="btn-enter" style="width:100%;" onclick="checkPass()">LOGIN</button>
+    </div>
+
+    <div id="updatePanel" class="update-wrapper">
+        <h2>MANUAL UPDATES</h2>
+        
+        <!-- জব আপলোড -->
+        <div class="form-group">
+            <h3>Upload Micro Job</h3>
+            <input type="text" id="job-img" placeholder="Image URL (Direct Link)">
+            <input type="text" id="job-link" placeholder="Target Link (Website/Video)">
+            <input type="text" id="job-inst" placeholder="Instruction (e.g. Like this post)">
+            <button class="btn-enter" onclick="addJob()">POST JOB</button>
+        </div>
+
+        <!-- আর্টিকেল আপলোড -->
+        <div class="form-group">
+            <h3>Upload Article</h3>
+            <input type="text" id="art-title" placeholder="Article Title">
+            <input type="text" id="art-link" placeholder="Website Link">
+            <button class="btn-enter" onclick="addArticle()">POST ARTICLE</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { db } from './firebase-config.js';
+        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        window.checkPass = function() {
+            if(document.getElementById('pass').value === "KAWSARahmed22@@") {
+                document.getElementById('loginBox').style.display = 'none';
+                document.getElementById('updatePanel').style.display = 'block';
+            } else { alert("Access Denied!"); }
+        }
+
+        window.addJob = async function() {
+            const img = document.getElementById('job-img').value;
+            const link = document.getElementById('job-link').value;
+            const inst = document.getElementById('job-inst').value;
+            if(!img || !link) return alert("Image and Link required!");
+            await addDoc(collection(db, "jobs"), { imageUrl: img, targetUrl: link, instruction: inst });
+            alert("Job Added!");
+        }
+
+        window.addArticle = async function() {
+            const title = document.getElementById('art-title').value;
+            const link = document.getElementById('art-link').value;
+            if(!title || !link) return alert("Title and Link required!");
+            await addDoc(collection(db, "articles"), { title: title, url: link });
+            alert("Article Added!");
+        }
+    </script>
+</body>
+</html>
