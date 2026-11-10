@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ACCESS PORTAL | SATOSHI</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .login-wrapper { height: 100vh; display: flex; align-items: center; justify-content: center; background: #fafafa; }
+        .box { background: #fff; border: 1px solid #000; padding: 40px; width: 350px; box-shadow: 10px 10px 0 #000; }
+        .box h2 { text-align: center; letter-spacing: 5px; font-weight: 300; margin-bottom: 30px; }
+        .box input { width: 100%; padding: 12px; margin: 10px 0; border: none; border-bottom: 1px solid #ccc; font-family: inherit; box-sizing: border-box; outline: none; background: transparent; }
+        .box button { width: 100%; padding: 15px; background: #000; color: #fff; border: none; cursor: pointer; margin-top: 20px; font-family: inherit; transition: 0.3s;}
+        .box button:hover { background: var(--gold); color: #000; }
+        .toggle-text { text-align: center; font-size: 11px; margin-top: 20px; color: #666; cursor: pointer; }
+        #signup-form { display: none; }
+    </style>
+</head>
+<body>
+    <header class="nav-bar">
+        <a href="index.html" class="back-btn">← BACK TO HOME</a>
+        <div class="rr-logo-container"><span class="k-char k-front">PIX</span><span class="k-char k-back">PIX</span></div>
+        <div class="brand-subtitle">SATOSHI</div>
+    </header>
+
+    <div class="login-wrapper">
+        <div class="box">
+            <!-- Login Form (2 Fields) -->
+            <div id="login-form">
+                <h2>SIGN IN</h2>
+                <input type="text" id="login-phone" placeholder="Mobile Number">
+                <input type="password" id="login-pass" placeholder="Password">
+                <button onclick="handleLogin()">LOGIN</button>
+                <div class="toggle-text" onclick="toggleForm()">Don't have an account? Sign Up</div>
+            </div>
+
+            <!-- Signup Form (3 Fields + Referral) -->
+            <div id="signup-form">
+                <h2>SIGN UP</h2>
+                <input type="text" id="reg-name" placeholder="Full Name">
+                <input type="text" id="reg-phone" placeholder="Mobile Number">
+                <input type="password" id="reg-pass" placeholder="Password">
+                <input type="text" id="reg-ref" placeholder="Referral Code (Optional)">
+                <button onclick="handleSignup()">REGISTER</button>
+                <div class="toggle-text" onclick="toggleForm()">Already have an account? Sign In</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth, db } from './firebase-config.js';
+        import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        window.toggleForm = function() {
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            loginForm.style.display = loginForm.style.display === 'none' ? 'block' : 'none';
+            signupForm.style.display = signupForm.style.display === 'none' ? 'block' : 'none';
+        }
+
+        window.handleSignup = async function() {
+            const name = document.getElementById('reg-name').value;
+            const phone = document.getElementById('reg-phone').value;
+            const pass = document.getElementById('reg-pass').value;
+            const refCode = document.getElementById('reg-ref').value; // রেফারেল নাম্বার
+
+            if(!name || !phone || !pass) return alert("Please fill all required fields.");
+            const email = phone + "@satoshi.com";
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+                const user = userCredential.user;
+
+                await setDoc(doc(db, "users", user.uid), {
+                    name: name,
+                    phone: phone,
+                    email: email,
+                    referredBy: refCode || "None", // রেফারেল কোড সেভ
+                    status: "pending",
+                    balance: 0,
+                    gender: "male", // ডিফল্ট
+                    blockName: name,
+                    socialLink: "",
+                    createdAt: new Date()
+                });
+
+                alert(`Welcome ${name}!\nAccount created. Please login.`);
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                setTimeout(() => { toggleForm(); }, 2000);
+
+            } catch (error) {
+                alert("Signup Error: " + error.message);
+            }
+        }
+
+        window.handleLogin = async function() {
+            const phone = document.getElementById('login-phone').value;
+            const pass = document.getElementById('login-pass').value;
+            const email = phone + "@satoshi.com";
+
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+                window.location.href = "dashboard.html";
+            } catch (error) {
+                alert("Login Failed: " + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
